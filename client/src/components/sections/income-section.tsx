@@ -20,12 +20,17 @@ export function IncomeSection({ onNavigate }: IncomeSectionProps) {
   });
 
   const toggleStream = (streamType: string) => {
-    const currentStream = userIncomeStreams?.find(s => s.streamType === streamType);
-    if (currentStream) {
+    const currentStream = userIncomeStreams?.find((s: any) => s.streamType === streamType);
+    const staticStream = incomeStreams.find(s => s.id === streamType);
+    
+    if (currentStream && staticStream) {
+      const newIsActive = !currentStream.isActive;
+      const newMonthlyRevenue = newIsActive ? staticStream.minIncome : 0;
+      
       updateIncomeStreamMutation.mutate({
         streamType,
-        isActive: !currentStream.isActive,
-        monthlyRevenue: currentStream.monthlyRevenue
+        isActive: newIsActive,
+        monthlyRevenue: newMonthlyRevenue
       });
     }
   };
@@ -33,15 +38,21 @@ export function IncomeSection({ onNavigate }: IncomeSectionProps) {
   const calculateTotalIncome = () => {
     if (!userIncomeStreams) return { min: 0, max: 0 };
     
-    const activeStreams = userIncomeStreams.filter((stream: any) => stream.isActive);
-    const total = activeStreams.reduce((sum: number, stream: any) => sum + stream.monthlyRevenue, 0);
+    // Get active streams from user data
+    const activeUserStreams = userIncomeStreams.filter((stream: any) => stream.isActive);
     
-    // Calculate potential based on static data
-    const activeStreamTypes = activeStreams.map((s: any) => s.streamType);
+    // Calculate current total from user data
+    const currentTotal = activeUserStreams.reduce((sum: number, stream: any) => sum + stream.monthlyRevenue, 0);
+    
+    // Calculate potential based on static data for active streams
+    const activeStreamTypes = activeUserStreams.map((s: any) => s.streamType);
     const potentialStreams = incomeStreams.filter((s: any) => activeStreamTypes.includes(s.id));
     const maxPotential = potentialStreams.reduce((sum: number, stream: any) => sum + stream.maxIncome, 0);
     
-    return { min: total, max: Math.max(total, maxPotential) };
+    return { 
+      min: currentTotal, 
+      max: maxPotential || currentTotal
+    };
   };
 
   const formatIncome = (amount: number) => {
