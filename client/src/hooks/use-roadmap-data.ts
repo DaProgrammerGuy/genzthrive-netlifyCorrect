@@ -8,7 +8,7 @@ import {
   updateIncomeStream
 } from '@/lib/api-client';
 
-const DEMO_USER_ID = 'demo_user';
+const DEMO_USER_ID = 'd27fe8d4-67c8-4f1c-a995-b751617e3e95';
 
 // Progress hooks
 export function useUserProgress() {

@@ -2,7 +2,7 @@
 import { getUserData, saveUserData, type UserData } from './local-storage';
 
 const API_BASE = '/api';
-const DEMO_USER_ID = 'demo_user'; // For demo purposes
+const DEMO_USER_ID = 'd27fe8d4-67c8-4f1c-a995-b751617e3e95'; // Demo user UUID
 
 interface ApiResponse<T> {
   data?: T;
