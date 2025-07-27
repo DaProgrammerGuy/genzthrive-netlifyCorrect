@@ -24,9 +24,10 @@ git push -u origin main
 2. Click **"New site from Git"**
 3. Choose **GitHub** and authorize
 4. Select your repository
-5. Build settings should auto-populate:
-   - **Build command**: `node build-netlify.js`
+5. Build settings should auto-populate from netlify.toml:
+   - **Build command**: (automatically detected)
    - **Publish directory**: `dist`
+   - **Functions directory**: `netlify/functions`
 
 ### Step 3: Add Environment Variables
 In Netlify dashboard → Site settings → Environment variables, add:

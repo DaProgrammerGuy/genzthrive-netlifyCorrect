@@ -1,0 +1,106 @@
+2:43:35 AM: build-image version: 09e1898b62f1787f28f3d49630f96c3fc8719129 (noble)
+2:43:35 AM: buildbot version: 09e1898b62f1787f28f3d49630f96c3fc8719129
+2:43:35 AM: Fetching cached dependencies
+2:43:35 AM: Failed to fetch cache, continuing with build
+2:43:35 AM: Starting to prepare the repo for build
+2:43:35 AM: No cached dependencies found. Cloning fresh repo
+2:43:35 AM: git clone --filter=blob:none https://github.com/DaProgrammerGuy/genzthrive-netlify  
+2:43:35 AM: Preparing Git Reference refs/heads/main
+2:43:36 AM: Custom build command detected. Proceeding with the specified command: 'npm run build'
+2:43:37 AM: Starting to install dependencies
+2:43:38 AM: Downloading and installing node v20.19.4...
+2:43:38 AM: Downloading https://nodejs.org/dist/v20.19.4/node-v20.19.4-linux-x64.tar.xz...  
+2:43:38 AM: Computing checksum with sha256sum
+2:43:38 AM: Checksums matched!
+2:43:40 AM: Now using node v20.19.4 (npm v10.8.2)
+2:43:41 AM: Enabling Node.js Corepack
+2:43:41 AM: Started restoring cached build plugins
+2:43:41 AM: Finished restoring cached build plugins
+2:43:41 AM: WARNING: The environment variable 'NODE_ENV' is set to 'production'. Any 'devDependencies' in package.json will not be installed
+2:43:41 AM: Started restoring cached corepack dependencies
+2:43:41 AM: Finished restoring cached corepack dependencies
+2:43:41 AM: No npm workspaces detected
+2:43:41 AM: Started restoring cached node modules
+2:43:41 AM: Finished restoring cached node modules
+2:43:41 AM: Installing npm packages using npm version 10.8.2
+2:43:46 AM: added 639 packages in 5s
+2:43:46 AM: npm packages installed
+2:43:46 AM: Successfully installed dependencies
+2:43:46 AM: Starting build script
+2:43:47 AM: Detected 1 framework(s)
+2:43:47 AM: "vite" at version "5.4.19"
+2:43:47 AM: Section completed: initializing
+2:43:48 AM: ​
+2:43:48 AM: Netlify Build                                                 
+2:43:48 AM: ────────────────────────────────────────────────────────────────
+2:43:48 AM: ​
+2:43:48 AM: ❯ Version
+2:43:48 AM:   @netlify/build 34.3.0
+2:43:48 AM: ​
+2:43:48 AM: ❯ Flags
+2:43:48 AM:   accountId: 6884af2c7e931601e620d307
+2:43:48 AM:   baseRelDir: true
+2:43:48 AM:   buildId: 68869d8673853d9244edc24d
+2:43:48 AM:   deployId: 68869d8673853d9244edc24f
+2:43:48 AM: ​
+2:43:48 AM: ❯ Current directory
+2:43:48 AM:   /opt/build/repo
+2:43:48 AM: ​
+2:43:48 AM: ❯ Config file
+2:43:48 AM:   /opt/build/repo/netlify.toml
+2:43:48 AM: ​
+2:43:48 AM: ❯ Context
+2:43:48 AM:   production
+2:43:48 AM: ​
+2:43:48 AM: build.command from netlify.toml                               
+2:43:48 AM: ────────────────────────────────────────────────────────────────
+2:43:48 AM: ​
+2:43:48 AM: $ npm run build
+2:43:48 AM: > rest-express@1.0.0 build
+2:43:48 AM: > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2:43:48 AM: sh: 1: vite: not found
+2:43:49 AM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2  )
+2:43:49 AM: ​
+2:43:49 AM: "build.command" failed                                        
+2:43:49 AM: ────────────────────────────────────────────────────────────────
+2:43:49 AM: ​
+2:43:49 AM:   Error message
+2:43:49 AM:   Command failed with exit code 127: npm run build (https://ntl.fyi/exit-code-127  )
+2:43:49 AM: ​
+2:43:49 AM:   Error location
+2:43:49 AM:   In build.command from netlify.toml:
+2:43:49 AM:   npm run build
+2:43:49 AM: ​
+2:43:49 AM:   Resolved config
+2:43:49 AM:   build:
+2:43:49 AM:     command: npm run build
+2:43:49 AM:     commandOrigin: config
+2:43:49 AM:     environment:
+2:43:49 AM:       - DATABASE_URL
+2:43:49 AM:       - NODE_ENV
+2:43:49 AM:       - PGHOST
+2:43:49 AM:       - NODE_VERSION
+2:43:49 AM:     publish: /opt/build/repo/dist
+2:43:49 AM:     publishOrigin: config
+2:43:49 AM:   functionsDirectory: /opt/build/repo/netlify/functions
+2:43:49 AM:   headers:
+2:43:49 AM:     - for: /*
+      values:
+        Referrer-Policy: strict-origin-when-cross-origin
+        X-Content-Type-Options: nosniff
+        X-Frame-Options: DENY
+    - for: /assets/*
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+  headersOrigin: config
+  redirects:
+    - from: /api/*
+      status: 200
+      to: /.netlify/functions/api/:splat
+    - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+2:43:49 AM: Build failed due to a user error: Build script returned non-zero exit code: 2
+2:43:49 AM: Failing build: Failed to build site
+2:43:49 AM: Finished processing build request in 14.417s
