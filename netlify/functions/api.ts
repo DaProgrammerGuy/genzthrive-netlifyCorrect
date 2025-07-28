@@ -182,22 +182,11 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
     // Create user endpoint
     if (httpMethod === 'POST' && pathSegments[0] === 'users') {
       const body = parseBody(event);
-      const userId = body.userId || generateUUID();
-      const username = `user_${userId.slice(0, 8)}`;
+      const providedUserId = body.userId;
       
-      try {
-        const user = await storage.createUser({
-          username,
-          password: "auto_generated"
-        });
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ userId: user.id, username: user.username }),
-        };
-      } catch (error) {
-        // User might already exist, try to find them
-        const existingUser = await storage.getUserByUsername(username);
+      // If a userId is provided, check if user already exists
+      if (providedUserId) {
+        const existingUser = await storage.getUser(providedUserId);
         if (existingUser) {
           return {
             statusCode: 200,
@@ -205,10 +194,35 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
             body: JSON.stringify({ userId: existingUser.id, username: existingUser.username }),
           };
         }
+      }
+      
+      // Create new user - let database generate the ID
+      const timestamp = Date.now();
+      const randomSuffix = Math.random().toString(36).substring(2, 8);
+      const username = `user_${timestamp}_${randomSuffix}`;
+      
+      try {
+        const user = await storage.createUser({
+          username,
+          password: "auto_generated"
+        });
+        
+        console.log('User created successfully:', user.id);
+        
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ userId: user.id, username: user.username }),
+        };
+      } catch (error) {
+        console.error('Failed to create user:', error);
         return {
           statusCode: 500,
           headers,
-          body: JSON.stringify({ message: 'Failed to create user', error: error instanceof Error ? error.message : 'Unknown error' }),
+          body: JSON.stringify({ 
+            message: 'Failed to create user', 
+            error: error instanceof Error ? error.message : 'Unknown error' 
+          }),
         };
       }
     }

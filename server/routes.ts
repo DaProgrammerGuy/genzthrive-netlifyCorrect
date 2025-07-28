@@ -5,6 +5,23 @@ import { insertUserProgressSchema, insertSkillProgressSchema, insertIncomeStream
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Create a new user (auto-registration)
+  app.post("/api/users", async (req, res) => {
+    try {
+      const userId = req.body.userId || crypto.randomUUID();
+      const username = `user_${userId.slice(0, 8)}`;
+      
+      const user = await storage.createUser({
+        username,
+        password: "auto_generated" // Not used in your current flow
+      });
+      
+      res.json({ userId: user.id, username: user.username });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+
   // Get user progress
   app.get("/api/progress/:userId", async (req, res) => {
     try {

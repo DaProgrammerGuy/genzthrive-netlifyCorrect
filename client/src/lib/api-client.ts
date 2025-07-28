@@ -1,7 +1,7 @@
 // API client for communicating with the backend
 import { getUserData, saveUserData, type UserData } from './local-storage';
 
-const API_BASE = '/api';
+const API_BASE = '/.netlify/functions/api';
 
 interface ApiResponse<T> {
   data?: T;
