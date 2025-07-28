@@ -213,6 +213,8 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
       }
     }
 
+    
+
     if (httpMethod === 'GET' && pathSegments[0] === 'progress' && pathSegments[1]) {
       const userId = pathSegments[1];
       const progress = await storage.getUserProgress(userId);
