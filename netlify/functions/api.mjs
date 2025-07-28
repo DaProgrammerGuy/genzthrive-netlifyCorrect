@@ -86,6 +86,13 @@ if (!process.env.DATABASE_URL) {
 }
 var pool = new Pool({ connectionString: process.env.DATABASE_URL });
 var db = drizzle({ client: pool, schema: schema_exports });
+function generateUUID() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == "x" ? r : r & 3 | 8;
+    return v.toString(16);
+  });
+}
 var DatabaseStorage = class {
   async getUser(id) {
     const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -165,6 +172,36 @@ var handler = async (event, context) => {
   try {
     const apiPath = event.path.replace("/.netlify/functions/api", "") || "/";
     const pathSegments = apiPath.split("/").filter(Boolean);
+    if (httpMethod === "POST" && pathSegments[0] === "users") {
+      const body = parseBody(event);
+      const userId = body.userId || generateUUID();
+      const username = `user_${userId.slice(0, 8)}`;
+      try {
+        const user = await storage.createUser({
+          username,
+          password: "auto_generated"
+        });
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ userId: user.id, username: user.username })
+        };
+      } catch (error) {
+        const existingUser = await storage.getUserByUsername(username);
+        if (existingUser) {
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ userId: existingUser.id, username: existingUser.username })
+          };
+        }
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ message: "Failed to create user", error: error instanceof Error ? error.message : "Unknown error" })
+        };
+      }
+    }
     if (httpMethod === "GET" && pathSegments[0] === "progress" && pathSegments[1]) {
       const userId = pathSegments[1];
       const progress = await storage.getUserProgress(userId);

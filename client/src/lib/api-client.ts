@@ -2,7 +2,6 @@
 import { getUserData, saveUserData, type UserData } from './local-storage';
 
 const API_BASE = '/api';
-const DEMO_USER_ID = 'd27fe8d4-67c8-4f1c-a995-b751617e3e95'; // Demo user UUID
 
 interface ApiResponse<T> {
   data?: T;
@@ -10,7 +9,7 @@ interface ApiResponse<T> {
 }
 
 // API functions
-export async function fetchUserProgress(userId: string = DEMO_USER_ID) {
+export async function fetchUserProgress(userId: string) {
   try {
     const response = await fetch(`${API_BASE}/progress/${userId}`);
     if (!response.ok) throw new Error('Failed to fetch progress');
@@ -21,7 +20,7 @@ export async function fetchUserProgress(userId: string = DEMO_USER_ID) {
   }
 }
 
-export async function updateUserProgress(userId: string = DEMO_USER_ID, phase: number, progress: number, completedTasks: string[] = []) {
+export async function updateUserProgress(userId: string, phase: number, progress: number, completedTasks: string[] = []) {
   try {
     const response = await fetch(`${API_BASE}/progress`, {
       method: 'POST',
@@ -43,7 +42,7 @@ export async function updateUserProgress(userId: string = DEMO_USER_ID, phase: n
   }
 }
 
-export async function fetchUserSkills(userId: string = DEMO_USER_ID) {
+export async function fetchUserSkills(userId: string) {
   try {
     const response = await fetch(`${API_BASE}/skills/${userId}`);
     if (!response.ok) throw new Error('Failed to fetch skills');
@@ -54,7 +53,7 @@ export async function fetchUserSkills(userId: string = DEMO_USER_ID) {
   }
 }
 
-export async function updateSkillProgress(userId: string = DEMO_USER_ID, skillCategory: string, skillName: string, level: number) {
+export async function updateSkillProgress(userId: string, skillCategory: string, skillName: string, level: number) {
   try {
     const response = await fetch(`${API_BASE}/skills`, {
       method: 'POST',
@@ -75,7 +74,7 @@ export async function updateSkillProgress(userId: string = DEMO_USER_ID, skillCa
   }
 }
 
-export async function fetchUserIncomeStreams(userId: string = DEMO_USER_ID) {
+export async function fetchUserIncomeStreams(userId: string) {
   try {
     const response = await fetch(`${API_BASE}/income/${userId}`);
     if (!response.ok) throw new Error('Failed to fetch income streams');
@@ -86,7 +85,7 @@ export async function fetchUserIncomeStreams(userId: string = DEMO_USER_ID) {
   }
 }
 
-export async function updateIncomeStream(userId: string = DEMO_USER_ID, streamType: string, isActive: boolean, monthlyRevenue: number = 0) {
+export async function updateIncomeStream(userId: string, streamType: string, isActive: boolean, monthlyRevenue: number = 0) {
   try {
     const response = await fetch(`${API_BASE}/income`, {
       method: 'POST',

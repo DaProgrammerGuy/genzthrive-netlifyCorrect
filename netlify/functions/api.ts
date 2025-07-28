@@ -32,6 +32,15 @@ if (!process.env.DATABASE_URL) {
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle({ client: pool, schema });
 
+// Simple UUID v4 generator for Netlify compatibility
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 // Database storage class
 class DatabaseStorage {
   async getUser(id: string): Promise<User | undefined> {
@@ -169,6 +178,41 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
     const pathSegments = apiPath.split('/').filter(Boolean);
 
     // Route handling
+    
+    // Create user endpoint
+    if (httpMethod === 'POST' && pathSegments[0] === 'users') {
+      const body = parseBody(event);
+      const userId = body.userId || generateUUID();
+      const username = `user_${userId.slice(0, 8)}`;
+      
+      try {
+        const user = await storage.createUser({
+          username,
+          password: "auto_generated"
+        });
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ userId: user.id, username: user.username }),
+        };
+      } catch (error) {
+        // User might already exist, try to find them
+        const existingUser = await storage.getUserByUsername(username);
+        if (existingUser) {
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ userId: existingUser.id, username: existingUser.username }),
+          };
+        }
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ message: 'Failed to create user', error: error instanceof Error ? error.message : 'Unknown error' }),
+        };
+      }
+    }
+
     if (httpMethod === 'GET' && pathSegments[0] === 'progress' && pathSegments[1]) {
       const userId = pathSegments[1];
       const progress = await storage.getUserProgress(userId);
